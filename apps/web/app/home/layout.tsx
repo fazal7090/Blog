@@ -21,20 +21,26 @@ import { HomeMobileNavigation } from './_components/home-mobile-navigation';
 import { HomeSidebar } from './_components/home-sidebar';
 
 function HomeLayout({ children }: React.PropsWithChildren) {
-  const style = use(getLayoutStyle());
+  // Require user + get layout style in parallel
+  const [user, style] = use(
+    Promise.all([requireUserInServerComponent(), getLayoutStyle()]),
+  );
 
   if (style === 'sidebar') {
-    return <SidebarLayout>{children}</SidebarLayout>;
+    return <SidebarLayout user={user}>{children}</SidebarLayout>;
   }
 
-  return <HeaderLayout>{children}</HeaderLayout>;
+  return <HeaderLayout user={user}>{children}</HeaderLayout>;
 }
 
 export default withI18n(HomeLayout);
 
-function SidebarLayout({ children }: React.PropsWithChildren) {
+type LayoutProps = React.PropsWithChildren<{
+  user: Awaited<ReturnType<typeof requireUserInServerComponent>>;
+}>;
+
+function SidebarLayout({ children, user }: LayoutProps) {
   const sidebarMinimized = navigationConfig.sidebarCollapsed;
-  const [user] = use(Promise.all([requireUserInServerComponent()]));
 
   return (
     <SidebarProvider defaultOpen={sidebarMinimized}>
@@ -53,7 +59,7 @@ function SidebarLayout({ children }: React.PropsWithChildren) {
   );
 }
 
-function HeaderLayout({ children }: React.PropsWithChildren) {
+function HeaderLayout({ children }: LayoutProps) {
   return (
     <Page style={'header'}>
       <PageNavigation>
@@ -73,7 +79,6 @@ function MobileNavigation() {
   return (
     <>
       <AppLogo />
-
       <HomeMobileNavigation />
     </>
   );

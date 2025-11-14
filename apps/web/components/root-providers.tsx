@@ -12,7 +12,6 @@ import { If } from '@kit/ui/if';
 import { VersionUpdater } from '@kit/ui/version-updater';
 
 import { AuthProvider } from '~/components/auth-provider';
-import appConfig from '~/config/app.config';
 import authConfig from '~/config/auth.config';
 import featuresFlagConfig from '~/config/feature-flags.config';
 import { i18nResolver } from '~/lib/i18n/i18n.resolver';
@@ -36,11 +35,9 @@ const CaptchaTokenSetter = dynamic(async () => {
 
 export function RootProviders({
   lang,
-  theme = appConfig.theme,
   children,
 }: React.PropsWithChildren<{
   lang: string;
-  theme?: string;
 }>) {
   const i18nSettings = useMemo(() => getI18nSettings(lang), [lang]);
 
@@ -53,9 +50,10 @@ export function RootProviders({
           <AuthProvider>
             <ThemeProvider
               attribute="class"
-              enableSystem
               disableTransitionOnChange
-              defaultTheme={theme}
+              defaultTheme="light"
+              enableSystem={false}
+              forcedTheme="light"
               enableColorScheme={false}
             >
               {children}

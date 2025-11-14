@@ -1,59 +1,34 @@
-import { cookies } from 'next/headers';
-
-import { Toaster } from '@kit/ui/sonner';
-import { cn } from '@kit/ui/utils';
-
+// app/layout.tsx
+import "../styles/globals.css"
+import type { ReactNode } from "react"
+import Link from "next/link"
 import { RootProviders } from '~/components/root-providers';
-import { heading, sans } from '~/lib/fonts';
 import { createI18nServerInstance } from '~/lib/i18n/i18n.server';
-import { generateRootMetadata } from '~/lib/root-metdata';
 
-import '../styles/globals.css';
-
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+ 
   const { language } = await createI18nServerInstance();
-  const theme = await getTheme();
-  const className = getClassName(theme);
 
   return (
-    <html lang={language} className={className}>
-      <body>
-        <RootProviders theme={theme} lang={language}>
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <header className="bg-slate-100 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+          <div className="max-w-4xl mx-auto px-6 py-6">
+            <div className="flex items-center justify-between">
+              {/* Logo */}
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                ✨ Blog Web
+              </h1>
+
+             
+            </div>
+          </div>
+        </header>
+
+        <RootProviders lang={language}>
           {children}
         </RootProviders>
-
-        <Toaster richColors={true} theme={theme} position="top-center" />
       </body>
     </html>
-  );
+  )
 }
-
-function getClassName(theme?: string) {
-  const dark = theme === 'dark';
-  const light = !dark;
-
-  const font = [sans.variable, heading.variable].reduce<string[]>(
-    (acc, curr) => {
-      if (acc.includes(curr)) return acc;
-
-      return [...acc, curr];
-    },
-    [],
-  );
-
-  return cn('bg-background min-h-screen antialiased', ...font, {
-    dark,
-    light,
-  });
-}
-
-async function getTheme() {
-  const cookiesStore = await cookies();
-  return cookiesStore.get('theme')?.value as 'light' | 'dark' | 'system';
-}
-
-export const generateMetadata = generateRootMetadata;

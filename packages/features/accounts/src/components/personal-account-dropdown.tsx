@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from '@kit/ui/dropdown-menu';
 import { If } from '@kit/ui/if';
-import { SubMenuModeToggle } from '@kit/ui/mode-toggle';
 import { ProfileAvatar } from '@kit/ui/profile-avatar';
 import { Trans } from '@kit/ui/trans';
 import { cn } from '@kit/ui/utils';
@@ -29,7 +28,6 @@ export function PersonalAccountDropdown({
   signOutRequested,
   showProfileName = true,
   paths,
-  features,
   account,
 }: {
   user: JwtPayload;
@@ -44,10 +42,6 @@ export function PersonalAccountDropdown({
 
   paths: {
     home: string;
-  };
-
-  features: {
-    enableThemeToggle: boolean;
   };
 
   showProfileName?: boolean;
@@ -145,12 +139,6 @@ export function PersonalAccountDropdown({
             </span>
           </Link>
         </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <If condition={features.enableThemeToggle}>
-          <SubMenuModeToggle />
-        </If>
 
         <DropdownMenuSeparator />
 

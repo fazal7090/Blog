@@ -54,6 +54,14 @@ const config = {
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  // Reduce source map requests for node_modules in development
+  webpack: (config, { dev, isServer }) => {
+    if (dev && !isServer) {
+      // Exclude node_modules from source maps to reduce 404 requests
+      config.devtool = 'eval-cheap-module-source-map';
+    }
+    return config;
+  },
 };
 
 export default config;
