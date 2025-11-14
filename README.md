@@ -50,3 +50,5 @@ npm run dev
 
 Visit `http://localhost:3000` for the marketing/paginated feed.  
 `/home` requires authentication and lets you create a post via Supabase GraphQL.
+
+The proj SS in image folder
